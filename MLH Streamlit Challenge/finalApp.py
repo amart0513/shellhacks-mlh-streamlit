@@ -336,11 +336,6 @@ def render_data():
         dump(model, model_file)
         st.success("Model trained and saved.")
 
-        # Display metrics
-        st.subheader("ML Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
-
     else:
         model = load(model_file)
 
@@ -350,11 +345,6 @@ def render_data():
         # Calculate metrics on filtered data
         mse = mean_squared_error(filtered_df['ODO mg/L'], predictions)
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
-
-        # Show metrics after loading model
-        st.subheader("Machine Learning Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
 
     # Visualization Tabs
     with Scatter_Plots_tab:
@@ -370,7 +360,7 @@ def render_data():
 
     # Machine Learning Visualizations
     with ML_Visualizations_tab:
-        if 'mse' in locals() and 'r2' in locals():
+        if 'mse' is None and 'r2' is None:
             # Plot predicted vs actual graphs
             st.subheader("Predicted vs Actual")
             plot_predictions_vs_actual(filtered_df['ODO mg/L'], predictions)
@@ -451,6 +441,7 @@ def render_sign_up():
             st.info("Please Fill out the form")
     st.divider()
     col5, col6, col7 = st.columns([1, 1, 1])
+
     with col5:
         st.image(IMAGE_FIU_BANNER, width=200)
 
