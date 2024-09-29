@@ -336,6 +336,11 @@ def render_data():
         dump(model, model_file)
         st.success("Model trained and saved.")
 
+        # Display metrics
+        st.subheader("ML Model Metrics")
+        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
+        st.metric(label="R² Score", value=f"{r2:.2f}")
+
     else:
         st.info("Loading existing model...")
         model = load(model_file)
@@ -346,6 +351,7 @@ def render_data():
         # Calculate metrics on filtered data
         mse = mean_squared_error(filtered_df['ODO mg/L'], predictions)
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
+
 
     # Visualization Tabs
     with Scatter_Plots_tab:
