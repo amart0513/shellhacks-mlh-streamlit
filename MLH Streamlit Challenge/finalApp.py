@@ -299,7 +299,7 @@ def render_data():
                      (df["pH"].between(selected_ph[0], selected_ph[1]))]
 
     # Create tabs for different visualizations
-    Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab, ML_Visualizations_tab = st.tabs(
+    tabs = st.tabs(
         ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data", "ML and Data Visualizations"])
 
     # Prepare features and target variable
@@ -307,19 +307,15 @@ def render_data():
     target = df['ODO mg/L']
 
     model_file = 'data.pkl'
+    mse, r2 = None, None  # Initialize metrics
 
     # Model training and metric calculation
     if not os.path.exists(model_file):
-        st.info("Training new model...")
-
         # Plot correlation heatmap
         plot_correlation_heatmap(df)
 
         # Split data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.4, random_state=42)
-
-        # Plot learning curve
-        plot_learning_curve(model_file, X_train, y_train)
+        X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.6, random_state=42)
 
         # Train the model
         model = LinearRegression()
@@ -347,20 +343,25 @@ def render_data():
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
 
     # Visualization Tabs
-    with Scatter_Plots_tab:
+    with tabs[0]:  # Scatter Plots
         scatter_plots(filtered_df)
-    with Maps_tab:
+    with tabs[1]:  # Maps
         maps(filtered_df)
-    with Line_Plots_tab:
+    with tabs[2]:  # Line
         line_plots(filtered_df)
-    with threeD_Plots_tab:
+    with tabs[3]:  # 3D Plots
         three_d_plots(filtered_df)
-    with Raw_Plots_tab:
+    with tabs[4]:  # Raw Data
         raw_data(filtered_df)
 
     # Machine Learning Visualizations
-    with ML_Visualizations_tab:
-        if 'mse' is None and 'r2' is None:
+    with tabs[5]:  # ML and Data Visualizations
+        if mse is not None and r2 is not None:
+            # Display metrics only if they are calculated
+            st.subheader("Machine Learning Model Metrics")
+            st.write(f"Mean Squared Error (MSE): {mse:.2f}")
+            st.write(f"R² Score: {r2:.2f}")
+
             # Plot predicted vs actual graphs
             st.subheader("Predicted vs Actual")
             plot_predictions_vs_actual(filtered_df['ODO mg/L'], predictions)
