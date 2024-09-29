@@ -20,5 +20,5 @@ st.set_page_config(page_title="ShellHacks: MLH Streamlit Challenge", layout="wid
                    page_icon="🌊", initial_sidebar_state="expanded")
 
 with st.sidebar:
-    st.image(IMAGE_MLH, width=100)
+    st.image(IMAGE_MLH, use_column_width=True)
     st.title("ShellHacks: MLH Streamlit Challenge")
