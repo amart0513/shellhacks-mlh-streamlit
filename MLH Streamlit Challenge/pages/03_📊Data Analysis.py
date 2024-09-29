@@ -178,7 +178,7 @@ def render_data():
                      (df["pH"].between(selected_ph[0], selected_ph[1]))]
 
     # Create tabs for different visualizations
-    Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab, ML_Visualizations_tab = st.tabs(
+    Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab = st.tabs(
         ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data"])
 
     # Prepare features and target variable
