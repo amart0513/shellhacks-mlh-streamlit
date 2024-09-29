@@ -31,10 +31,21 @@ st.image(IMAGE_BANNER, use_column_width=True)
 st.title("Water Quality Predictor with Machine Learning and Data Visualization")
 st.title("Home")
 # Project overview paragraph
-st.write("As a soon to graduate computer science students participating in ShellHacks 2024, our motive for creating a \
-   Streamlit website that uses machine learning to forecast water quality stems from the desire to tackle a pressing global\
-    issue—access to clean water. Water quality is crucial for public health, environmental sustainability, and economic development,\
-     yet many communities around the world face challenges in monitoring and managing this resource effectively.")
+st.write("As soon-to-graduate computer science students participating in ShellHacks 2024,\
+ we were driven by a shared commitment to addressing one of the world’s most critical challenges—access\
+  to clean and safe water. The motivation behind developing a Streamlit website that leverages machine learning\
+   for water quality forecasting stems from this urgency. Clean water is fundamental not only to public health,\
+    but also to environmental preservation and sustainable economic development. However, many regions, both in \
+    developed and developing countries, struggle with monitoring and managing water resources effectively.")
+
+st.write("Our project was designed to bridge this gap by creating a tool that empowers communities, local governments,\
+ and environmental organizations with a real-time, user-friendly platform for forecasting water quality. With machine\
+  learning at its core, the website processes historical and real-time data to make accurate predictions about water safety,\
+   offering insights that can help prevent waterborne diseases, reduce pollution, and support long-term environmental sustainability efforts.")
+
+st.write("By building this solution, we hope to contribute to raising awareness about global water challenges while showcasing the potential\
+ of modern technology in addressing them. Additionally, our project serves as a testament to the power of cross-disciplinary collaboration,\
+  where computer science, data analytics, and environmental science come together to make a tangible impact.")
 
 st.divider()
 st.subheader("Impact on Society")
