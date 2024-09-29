@@ -354,27 +354,6 @@ def render_data():
     with tabs[4]:  # Raw Data
         raw_data(filtered_df)
 
-    # Machine Learning Visualizations
-    with tabs[5]:  # ML and Data Visualizations
-        if mse is not None and r2 is not None:
-            # Display metrics only if they are calculated
-            st.subheader("Machine Learning Model Metrics")
-            st.write(f"Mean Squared Error (MSE): {mse:.2f}")
-            st.write(f"R² Score: {r2:.2f}")
-
-            # Plot predicted vs actual graphs
-            st.subheader("Predicted vs Actual")
-            plot_predictions_vs_actual(filtered_df['ODO mg/L'], predictions)
-
-            # Plot the error distribution after predicting
-            st.subheader("Error Distribution")
-            plot_error_distribution(filtered_df['ODO mg/L'], predictions)
-
-            # Plot residuals
-            st.subheader("Residuals")
-            plot_residuals(filtered_df['ODO mg/L'], predictions)
-        else:
-            st.warning("Metrics not available. Please train the model first.")
 
 
 def render_background():
