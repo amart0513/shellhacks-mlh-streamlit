@@ -1,18 +1,5 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.express as px
-import requests
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-from joblib import dump
-from joblib import load
-import pickle
-import os
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.model_selection import learning_curve
+
 
 IMAGE_MLH = "media/MLH.png"
 IMAGE_JESUS = "media/JesusPic.jpg"
@@ -45,10 +32,10 @@ st.title("About Us")
 st.subheader("Get to Know the Team!")
 st.divider()
 col1, col2, col3, col4 = st.columns(4)
-load_media(col2, IMAGE_JESUS, "Jesus Elespuru, Senior, Back-End Developer, Data-Collection, Florida International "
+load_media(col2, IMAGE_JESUS, "Jesus Elespuru, Senior, Front-End Developer, Data-Collection, Florida International "
                                   "University")
 load_media(col3, IMAGE_ANGIE,
-               "Angie Martinez, Senior, Front-End Developer, Data-Collection, Florida International University")
+               "Angie Martinez, Senior, Back-End Developer, Data-Collection, Florida International University")
 st.divider()
 col5, col6, col7 = st.columns([1, 1, 1])
 

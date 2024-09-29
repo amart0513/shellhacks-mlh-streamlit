@@ -1,18 +1,9 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
-import requests
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from joblib import dump
 from joblib import load
-import pickle
 import os
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.model_selection import learning_curve
+
 
 IMAGE_MLH = "media/MLH.png"
 
@@ -54,7 +45,6 @@ def predict_water_quality(df):
 
 
 st.title("ML Model Prediction for Water Quality")
-st.write("This section ")
 uploaded_file = st.file_uploader("Upload a CSV file for prediction", type=["csv"])
 
 if uploaded_file is not None:
