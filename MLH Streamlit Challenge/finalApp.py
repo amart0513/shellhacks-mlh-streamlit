@@ -205,8 +205,8 @@ def raw_data(df):
 # Define functions to render different pages
 def render_home_page():
     st.image(IMAGE_BANNER, use_column_width=True)
-    st.title("Water Quality Predictor with Machine Learning and Data Visualization")
-    st.title("Home")
+    st.title("FlowCast: Real-Time Water Monitoring and Prediction")
+    st.subheader("Home")
     # Project overview paragraph
     st.write("As a soon to graduate computer science students participating in ShellHacks 2024, our motive for creating a \
     Streamlit website that uses machine learning to forecast water quality stems from the desire to tackle a pressing global\
@@ -238,7 +238,7 @@ def render_home_page():
     # Footer
     st.divider()
     col5, col6, col7 = st.columns([1, 1, 1])
-    with col6:
+    with col5:
         st.image(IMAGE_FIU_BANNER, width=200)
 
 
