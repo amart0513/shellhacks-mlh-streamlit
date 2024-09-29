@@ -387,7 +387,6 @@ def render_data():
             st.warning("Metrics not available. Please train the model first.")
 
 
-
 def render_background():
     st.title("Background")
     st.subheader("About our Project")
