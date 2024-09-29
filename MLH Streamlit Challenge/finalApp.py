@@ -336,11 +336,6 @@ def render_data():
         dump(model, model_file)
         st.success("Model trained and saved.")
 
-        # Display metrics
-        st.subheader("ML Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
-
     else:
         st.info("Loading existing model...")
         model = load(model_file)
