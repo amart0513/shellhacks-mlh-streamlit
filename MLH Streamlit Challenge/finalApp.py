@@ -398,7 +398,7 @@ def render_background():
                    learning algorithms were trained on high-quality, location-specific data. This allowed for the creation of an accurate predictor \
                    capable of forecasting water quality trends based on historical and current measurements.")
     with col2:
-    #st.image(IMAGE1, use_column_width=True)
+        #st.image(IMAGE1, use_column_width=True)
 
     # Subheader and paragraph for additional information
     st.divider()
@@ -423,7 +423,7 @@ def render_background():
                    in the study areas through photographs and videos. These visuals not only enriched the understanding of water quality trends \
                    but also served as powerful tools for community engagement and awareness regarding conservation efforts.")
     with col4:
-    #st.image(IMAGE2, use_column_width=True)
+        #st.image(IMAGE2, use_column_width=True)
 
     st.divider()
     col5, col6, col7 = st.columns([1, 1, 1])
