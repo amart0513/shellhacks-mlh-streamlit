@@ -1,1 +1,1 @@
-# shellhacks-mlh-streamlit
+# ShellHacks 2024 - MLH Streamlit Challenge
