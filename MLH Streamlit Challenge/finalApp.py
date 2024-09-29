@@ -528,13 +528,46 @@ def predict_water_quality(df):
         prediction_df['Predicted ODO mg/L'] = predictions
         st.dataframe(prediction_df[['Depth m', 'Temp °C', 'pH', 'Predicted ODO mg/L']])
 
-        # Optionally, display MSE (if test data available)
         if 'ODO mg/L' in df.columns:
             true_values = df['ODO mg/L']
             mse = mean_squared_error(true_values, predictions)
             st.write(f"**Mean Squared Error (MSE):** {mse}")
+
+            # Scatter Plot
+            st.subheader("Actual vs Predicted Dissolved Oxygen (ODO mg/L)")
+            plt.figure(figsize=(10, 6))
+            plt.scatter(true_values, predictions, alpha=0.6)
+            plt.plot([true_values.min(), true_values.max()], [true_values.min(), true_values.max()], 'r--', lw=2)
+            plt.xlabel("Actual ODO mg/L")
+            plt.ylabel("Predicted ODO mg/L")
+            plt.title("Scatter Plot of Actual vs Predicted ODO")
+            st.pyplot(plt)
+            plt.clf()  # Clear the figure
+
+            # Error Distribution
+            st.subheader("Error Distribution")
+            errors = true_values - predictions
+            plt.figure(figsize=(10, 6))
+            sns.histplot(errors, bins=30, kde=True)
+            plt.xlabel("Prediction Error (Actual - Predicted ODO mg/L)")
+            plt.title("Error Distribution of Predictions")
+            st.pyplot(plt)
+            plt.clf()  # Clear the figure
+
+            # Line Plot
+            st.subheader("Line Plot of Actual and Predicted ODO over Index")
+            plt.figure(figsize=(10, 6))
+            plt.plot(prediction_df.index, true_values, label='Actual ODO mg/L', color='blue')
+            plt.plot(prediction_df.index, predictions, label='Predicted ODO mg/L', color='orange', linestyle='--')
+            plt.xlabel("Index")
+            plt.ylabel("ODO mg/L")
+            plt.title("Line Plot of Actual vs Predicted ODO")
+            plt.legend()
+            st.pyplot(plt)
+
     else:
         st.error(f"Model file {model_file} not found. Train the model first.")
+
 
 
 # Load data and render prediction page
