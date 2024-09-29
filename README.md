@@ -1,5 +1,5 @@
 # ShellHacks 2024 - MLH Streamlit Challenge
-# Water Quality Predictor with Machine Learning and Data Visualization
+# FlowCast: Real-Time Water Monitoring and Prediction
 
 ## Overview
 
