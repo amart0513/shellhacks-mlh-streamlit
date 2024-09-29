@@ -5,7 +5,7 @@ import plotly.express as px
 import requests
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from joblib import dump
 from joblib import load
 import pickle
@@ -194,10 +194,9 @@ def plot_learning_curve(model, X, y):
     st.pyplot(plt)
 
 
-
 # Raw data from dataframe (csv)
 def raw_data(df):
-    st.subheader("Raw Data")
+    st.subheader("Fetched Data")
     st.dataframe(df)
     st.subheader("Descriptive Statistics")
     st.dataframe(df.describe())
@@ -206,7 +205,7 @@ def raw_data(df):
 # Define functions to render different pages
 def render_home_page():
     st.image(IMAGE_BANNER, use_column_width=True)
-    st.title("Water Quality Predictor with ML")
+    st.title("Water Quality Predictor with Machine Learning and Data Visualization")
     st.title("Home")
     # Project overview paragraph
     st.write("As a soon to graduate computer science students participating in ShellHacks 2024, our motive for creating a \
@@ -243,7 +242,7 @@ def render_home_page():
         st.image(IMAGE_FIU_BANNER, width=200)
 
 
-def render_About():
+def render_about():
     st.title("About Us")
     st.subheader("Get to Know the Team!")
     st.divider()
@@ -259,18 +258,31 @@ def render_About():
         st.image(IMAGE_FIU_BANNER, width=200)
 
 
-def render_Data():
+def render_data():
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
-        st.success("File was Uploaded Successfully")
+        st.success("File uploaded successfully.")
     else:
         df = pd.read_csv("mission156-complete.csv")
+        st.info("Using default dataset.")
+
+    # Data validation
+    required_columns = ['Depth m', 'Temp °C', 'pH', 'ODO mg/L']
+    for column in required_columns:
+        if column not in df.columns:
+            st.error(f"Missing column: {column}. Please upload a valid CSV file.")
+            return
+
+    # Handle NaN values
+    if df.isnull().values.any():
+        st.warning("Data contains NaN values. Please clean your data.")
 
     st.header("Water Quality Monitoring")
     st.subheader("Data Analysis")
 
+    # Create sliders dynamically based on the data
     min_depth, max_depth = df["Depth m"].min(), df["Depth m"].max()
     min_temp, max_temp = df["Temp °C"].min(), df["Temp °C"].max()
     min_ph, max_ph = df["pH"].min(), df["pH"].max()
@@ -281,19 +293,26 @@ def render_Data():
                               value=(min_temp, max_temp))
     selected_ph = st.slider("Select pH", min_value=min_ph, max_value=max_ph, value=(min_ph, max_ph))
 
-    filtered_df = df[(df["Depth m"] >= selected_depth[0]) & (df["Depth m"] <= selected_depth[1]) &
-                     (df["Temp °C"] >= selected_temp[0]) & (df["Temp °C"] <= selected_temp[1]) &
-                     (df["pH"] >= selected_ph[0]) & (df["pH"] <= selected_ph[1])]
-    Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab = st.tabs(
-        ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data"])
+    # Filter data based on user selection
+    filtered_df = df[(df["Depth m"].between(selected_depth[0], selected_depth[1])) &
+                     (df["Temp °C"].between(selected_temp[0], selected_temp[1])) &
+                     (df["pH"].between(selected_ph[0], selected_ph[1]))]
 
-    # Select features and target variable
+    # Create tabs for different visualizations
+    Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab, ML_Visualizations_tab = st.tabs(
+        ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data", "ML and Data Visualizations"])
+
+    # Prepare features and target variable
     features = df[['Depth m', 'Temp °C', 'pH', 'ODO mg/L']]
-    target = df['ODO mg/L']  # focus on oxygen dissolve
+    target = df['ODO mg/L']
 
     model_file = 'data.pkl'
 
+    # Model training and metric calculation
     if not os.path.exists(model_file):
+        st.info("Training new model...")
+
+        # Plot correlation heatmap
         plot_correlation_heatmap(df)
 
         # Split data into training and testing sets
@@ -309,27 +328,36 @@ def render_Data():
         # Test the model
         predictions = model.predict(X_test)
 
-        # Plot predicted vs actual graphs
-        plot_predictions_vs_actual(y_test, predictions)
-
-        # Plot the error distribution after predicting
-        plot_error_distribution(y_test, predictions)
-
-        # Plot residuals
-        plot_residuals(y_test, predictions)
-
-        # Plot confusion matrix
-
+        # Calculate metrics
         mse = mean_squared_error(y_test, predictions)
-        print(f'Mean Squared Error: {mse}')
+        r2 = r2_score(y_test, predictions)
 
+        # Save model
         dump(model, model_file)
         st.success("Model trained and saved.")
-    else:
-        # Load the model
-        model = load(model_file)
-        st.info("Model already exists. Skipping training.")
 
+        # Display metrics
+        st.subheader("ML Model Metrics")
+        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
+        st.metric(label="R² Score", value=f"{r2:.2f}")
+
+    else:
+        st.info("Loading existing model...")
+        model = load(model_file)
+
+        # Use filtered data for predictions
+        predictions = model.predict(filtered_df[['Depth m', 'Temp °C', 'pH', 'ODO mg/L']])
+
+        # Calculate metrics on filtered data
+        mse = mean_squared_error(filtered_df['ODO mg/L'], predictions)
+        r2 = r2_score(filtered_df['ODO mg/L'], predictions)
+
+        # Show metrics after loading model
+        st.subheader("Machine Learning Model Metrics")
+        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
+        st.metric(label="R² Score", value=f"{r2:.2f}")
+
+    # Visualization Tabs
     with Scatter_Plots_tab:
         scatter_plots(filtered_df)
     with Maps_tab:
@@ -341,8 +369,26 @@ def render_Data():
     with Raw_Plots_tab:
         raw_data(filtered_df)
 
+    # Machine Learning Visualizations
+    with ML_Visualizations_tab:
+        if 'mse' in locals() and 'r2' in locals():
+            # Plot predicted vs actual graphs
+            st.subheader("Predicted vs Actual")
+            plot_predictions_vs_actual(filtered_df['ODO mg/L'], predictions)
 
-def render_Background():
+            # Plot the error distribution after predicting
+            st.subheader("Error Distribution")
+            plot_error_distribution(filtered_df['ODO mg/L'], predictions)
+
+            # Plot residuals
+            st.subheader("Residuals")
+            plot_residuals(filtered_df['ODO mg/L'], predictions)
+        else:
+            st.warning("Metrics not available. Please train the model first.")
+
+
+
+def render_background():
     st.title("Background")
     st.subheader("About our Project")
     col1, col2 = st.columns(2)
@@ -398,7 +444,7 @@ def render_sign_up():
         email = st.text_input("Email:")
         major = st.selectbox("Major:",
                              options=MAJORS)
-        level = st.selectbox("Degree Level:", options=["", "UnderGrad", "Masters", "PhD", "Other"])
+        level = st.selectbox("Degree Level:", options=["", "Undergrad", "Masters", "PhD", "Other"])
         subscribe = st.checkbox("Do you want to know about future events?")
         submit = st.form_submit_button("Submit")
         if (name and email and submit and subscribe and level) or (name and email and submit and level):
@@ -417,17 +463,60 @@ def render_sign_up():
 def render_API():
     st.title("Real-Time Data from National Oceanic and Atmospheric Administration (NOAA)")
 
-    station_id = '41122'  # Hollywood Beach, FL
+    # Define station IDs and their titles
+    stations = {
+        '41122': 'Hollywood Beach, FL',
+        '41114': 'Fort Pierce, FL',
+        '41010': 'Cape Canaveral, FL',
+        '42036': 'Tampa, FL',
+        '41070': 'Daytona Beach, FL'
+    }
+
+    # Sidebar for selecting a single station ID
+    selected_station = st.sidebar.selectbox(
+        "Select Station ID",
+        list(stations.keys()),
+        index=0  # Default selection (first station)
+    )
+
     if st.button('Fetch Real-Time Data'):
-        response = requests.get(API_URL.replace('<station_id>', station_id))
+        response = requests.get(API_URL.replace('<station_id>', selected_station))
         if response.status_code == 200:
             data = response.text.splitlines()
-            columns = ['YY', 'MM', 'DD', 'hh', 'mm', 'WDIR', 'WSPD', 'GST', 'WVHT', 'DPD', 'APD', 'MWD', 'PRES',
-                       'ATMP', 'WTMP', 'DEWP', 'VIS', 'PTDY', 'TIDE']
-            df_api = pd.DataFrame([x.split() for x in data[2:]], columns=columns)
+            columns = ['YY', 'MM', 'DD', 'hh', 'mm', 'WDIR', 'WSPD', 'GST', 'WVHT', 'DPD', 'APD', 'MWD',
+                       'PRES', 'ATMP', 'WTMP', 'DEWP', 'VIS', 'PTDY', 'TIDE']
+
+            # Skip header rows if necessary and construct the DataFrame
+            df_api = pd.DataFrame([x.split() for x in data[2:] if x.strip() != ''], columns=columns)
+
+            # Convert WTMP to numeric, forcing errors to NaN
+            df_api['WTMP'] = pd.to_numeric(df_api['WTMP'], errors='coerce')
+
+            # Display the title for the current station
+            st.subheader(stations[selected_station])
+
+            # Display the raw data or any visualizations you want
             raw_data(df_api)
+
+            # Check if we have valid data for water temperature
+            valid_data = df_api['WTMP'].dropna()
+            if not valid_data.empty:
+                # Create a line chart using matplotlib
+                plt.figure(figsize=(10, 5))
+                plt.plot(valid_data.index, valid_data, marker='o', linestyle='-', color='b')
+                plt.title(f'Water Temperature at {stations[selected_station]}')
+                plt.xlabel('Index')
+                plt.ylabel('Water Temperature (°C)')
+                plt.xticks(rotation=45)
+                plt.grid()
+                plt.legend(['Water Temperature'])
+
+                # Display the matplotlib chart in Streamlit
+                st.pyplot(plt)
+            else:
+                st.warning(f"No valid water temperature data available for the selected station.")
         else:
-            st.error("Failed to retrieve data. Please try again.")
+            st.error(f"Failed to retrieve data for station ID {selected_station}. Please try again.")
 
 
 # Load and predict the water quality prediction
@@ -462,7 +551,7 @@ def predict_water_quality(df):
 
 # Load data and render prediction page
 def render_predictions_water_quality():
-    st.title("Water Quality Predictive Model Prediction")
+    st.title("ML Model Prediction for Water Quality")
     st.write("This section ")
     uploaded_file = st.file_uploader("Upload a CSV file for prediction", type=["csv"])
 
@@ -488,11 +577,11 @@ with st.sidebar:
 if page == "Home":
     render_home_page()
 elif page == "About Us":
-    render_About()
+    render_about()
 elif page == "Data Analysis":
-    render_Data()
+    render_data()
 elif page == "Background":
-    render_Background()
+    render_background()
 elif page == "Sign Up":
     render_sign_up()
 elif page == "NOAA API Retrieval":
