@@ -254,7 +254,7 @@ def render_about():
     st.divider()
     col5, col6, col7 = st.columns([1, 1, 1])
 
-    with col6:
+    with col5:
         st.image(IMAGE_FIU_BANNER, width=200)
 
 
@@ -342,7 +342,6 @@ def render_data():
         st.metric(label="R² Score", value=f"{r2:.2f}")
 
     else:
-        st.info("Loading existing model...")
         model = load(model_file)
 
         # Use filtered data for predictions
@@ -429,9 +428,7 @@ def render_background():
     col5, col6, col7 = st.columns([1, 1, 1])
 
     with col5:
-        st.image(IMAGE_MLH, width=200)
-    with col7:
-        st.image(IMAGE_SH, width=300)
+        st.image(IMAGE_FIU_BANNER, width=200)
 
 
 def render_sign_up():
@@ -454,7 +451,7 @@ def render_sign_up():
             st.info("Please Fill out the form")
     st.divider()
     col5, col6, col7 = st.columns([1, 1, 1])
-    with col6:
+    with col5:
         st.image(IMAGE_FIU_BANNER, width=200)
 
 
