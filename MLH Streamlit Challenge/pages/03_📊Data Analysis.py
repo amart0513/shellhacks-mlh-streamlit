@@ -179,7 +179,7 @@ def render_data():
 
     # Create tabs for different visualizations
     Scatter_Plots_tab, Maps_tab, Line_Plots_tab, threeD_Plots_tab, Raw_Plots_tab, ML_Visualizations_tab = st.tabs(
-        ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data", "ML and Data Visualizations"])
+        ["Scatter Plots", "Maps", "Line", "3D Plots", "Raw Data"])
 
     # Prepare features and target variable
     features = df[['Depth m', 'Temp °C', 'pH', 'ODO mg/L']]
@@ -214,12 +214,6 @@ def render_data():
         dump(model, model_file)
         st.success("Model trained and saved.")
 
-        # Display metrics
-
-        st.subheader("ML Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
-
     else:
         model = load(model_file)
 
@@ -230,11 +224,6 @@ def render_data():
         mse = mean_squared_error(filtered_df['ODO mg/L'], predictions)
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
 
-        # Show metrics after loading model
-        st.divider()
-        st.subheader("Machine Learning Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
 
     # Visualization Tabs
     with Scatter_Plots_tab:
@@ -247,23 +236,6 @@ def render_data():
         three_d_plots(filtered_df)
     with Raw_Plots_tab:
         raw_data(filtered_df)
-
-    # Machine Learning Visualizations
-    with ML_Visualizations_tab:
-        if 'mse' in locals() and 'r2' in locals():
-            # Plot predicted vs actual graphs
-            st.subheader("Predicted vs Actual")
-            plot_predictions_vs_actual(filtered_df['ODO mg/L'], predictions)
-
-            # Plot the error distribution after predicting
-            st.subheader("Error Distribution")
-            plot_error_distribution(filtered_df['ODO mg/L'], predictions)
-
-            # Plot residuals
-            st.subheader("Residuals")
-            plot_residuals(filtered_df['ODO mg/L'], predictions)
-        else:
-            st.warning("Metrics not available. Please train the model first.")
 
 
 render_data()
