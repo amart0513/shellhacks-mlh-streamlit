@@ -15,8 +15,8 @@ with st.sidebar:
 
 
 st.image(IMAGE_BANNER, use_column_width=True)
-st.title("Water Quality Predictor with Machine Learning and Data Visualization")
-st.title("Home")
+st.title("FlowCast: Real-Time Water Monitoring and Prediction")
+st.subheader("Home")
 # Project overview paragraph
 st.write("As soon-to-graduate computer science students participating in ShellHacks 2024,\
  we were driven by a shared commitment to addressing one of the world’s most critical challenges—access\
