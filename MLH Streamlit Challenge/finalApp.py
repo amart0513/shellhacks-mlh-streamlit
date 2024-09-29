@@ -352,11 +352,6 @@ def render_data():
         mse = mean_squared_error(filtered_df['ODO mg/L'], predictions)
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
 
-        # Show metrics after loading model
-        st.subheader("Machine Learning Model Metrics")
-        st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
-        st.metric(label="R² Score", value=f"{r2:.2f}")
-
     # Visualization Tabs
     with Scatter_Plots_tab:
         scatter_plots(filtered_df)
