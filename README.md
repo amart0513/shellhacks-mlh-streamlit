@@ -1,17 +1,17 @@
 # ShellHacks 2024 - MLH Streamlit Challenge
 # Water Quality Predictor with Machine Learning and Data Visualization
 
-##Overview
+## Overview
 
 This project is a Water Quality Predictor built using Streamlit, an open-source Python library for creating web apps, and powered by machine learning for water quality prediction. The app focuses on predicting water quality in specific regions, such as Biscayne Bay and Haulover Beach, while visualizing and analyzing historical and real-time water quality data.
 
-##Features
+## Features
 
-- [] Real-time Data Integration: Fetches live water quality data from the NOAA API for continuous updates.
-- [] Interactive Visualizations: Visualize water quality data through scatter plots, line charts, maps, and 3D plots.
-- [] Machine Learning Predictions: Predict water quality parameters (e.g., oxygen levels, temperature) based on historical trends.
-- [] Multiple Station Analysis: Compare data across different water stations by selecting multiple station IDs for side-by-side charts and visualizations.
-- [] User Engagement: Users can upload their own water quality data, view past research summaries, and sign up for updates.
+- [X] Real-time Data Integration: Fetches live water quality data from the NOAA API for continuous updates.
+- [X] Interactive Visualizations: Visualize water quality data through scatter plots, line charts, maps, and 3D plots.
+- [X] Machine Learning Predictions: Predict water quality parameters (e.g., oxygen levels, temperature) based on historical trends.
+- [X] Multiple Station Analysis: Compare data across different water stations by selecting multiple station IDs for side-by-side charts and visualizations.
+- [X] User Engagement: Users can upload their own water quality data, view past research summaries, and sign up for updates.
 
 ## Table of Contents
 
