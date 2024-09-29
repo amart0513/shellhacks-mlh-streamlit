@@ -82,3 +82,4 @@ st.divider()
 col5, col6, col7 = st.columns([1, 1, 1])
 with col6:
     st.image(IMAGE_FIU_BANNER, width=200)
+

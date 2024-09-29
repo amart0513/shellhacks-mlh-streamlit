@@ -215,6 +215,7 @@ def render_data():
         st.success("Model trained and saved.")
 
         # Display metrics
+
         st.subheader("ML Model Metrics")
         st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
         st.metric(label="R² Score", value=f"{r2:.2f}")
@@ -230,6 +231,7 @@ def render_data():
         r2 = r2_score(filtered_df['ODO mg/L'], predictions)
 
         # Show metrics after loading model
+        st.divider()
         st.subheader("Machine Learning Model Metrics")
         st.metric(label="Mean Squared Error (MSE)", value=f"{mse:.2f}")
         st.metric(label="R² Score", value=f"{r2:.2f}")
