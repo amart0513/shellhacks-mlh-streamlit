@@ -136,6 +136,7 @@ with st.sidebar:
         st.subheader("Descriptive Statistics")
         st.dataframe(df.describe())
 
+
 def render_data():
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
@@ -188,7 +189,6 @@ def render_data():
 
     # Model training and metric calculation
     if not os.path.exists(model_file):
-        st.info("Training new model...")
 
         # Plot correlation heatmap
         plot_correlation_heatmap(df)
@@ -264,8 +264,6 @@ def render_data():
             plot_residuals(filtered_df['ODO mg/L'], predictions)
         else:
             st.warning("Metrics not available. Please train the model first.")
-
-
 
 
 render_data()
